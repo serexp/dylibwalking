@@ -9,7 +9,7 @@ const char* foundationFrameworkPath = "/System/Library/Frameworks/Foundation.fra
 
 int main() {
     const char* targetFunctionName = "NSLog";
-    void *foundation = dlopen(foundationFrameworkPath, RTLD_NOW); // RTLD_LAZY);
+    void *foundation = dlopen(foundationFrameworkPath, RTLD_NOW); /* RTLD_LAZY); */
     printf("[+] Loading Foundation framework from %s...\n", foundationFrameworkPath);
     if (!foundation) {
         printf("[!] dlopen error: %s\nFoundation framework loading failed!\n", dlerror());

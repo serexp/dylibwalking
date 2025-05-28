@@ -18,16 +18,16 @@ void* DarwinGetProcAddress(void* moduleBase, const char* procName) {
 
     struct mach_header_64 *header = (struct mach_header_64 *)moduleBase;
     if (header->magic != MH_MAGIC_64 && header->magic != MH_CIGAM_64) {
-        header = (struct mach_header_64 *)((char *)moduleBase + 16384); // Try slide for ASLR (minimal PoC attempt)
+        header = (struct mach_header_64 *)((char *)moduleBase + 16384); /* Try slide for ASLR (minimal PoC attempt) */ 
         if (header->magic != MH_MAGIC_64 && header->magic != MH_CIGAM_64)
-            return NULL; // Check magic number (64-bit Mach-O)
+            return NULL; /* Check magic number (64-bit Mach-O) */ 
     }
 
 
     struct load_command *load_cmd = (struct load_command *)((char *)moduleBase + sizeof(struct mach_header_64));
     struct symtab_command *symtab_cmd = NULL;
 
-    // Find LC_SYMTAB load command
+    /* Find LC_SYMTAB load command */
     for (uint32_t i = 0; i < header->ncmds; i++) {
         if (load_cmd->cmd == LC_SYMTAB) {
             symtab_cmd = (struct symtab_command *)load_cmd;
@@ -44,14 +44,14 @@ void* DarwinGetProcAddress(void* moduleBase, const char* procName) {
     for (uint32_t i = 0; i < symtab_cmd->nsyms; i++) {
         char *symbol_name = strtab + symtab[i].n_un.n_strx;
         if (strcmp(symbol_name, procName) == 0) {
-            // Basic check: exported and in a section (function) - TODO: improve
+            /* Basic check: exported and in a section (function) - TODO: improve */
             if ((symtab[i].n_type & N_TYPE) == N_SECT && (symtab[i].n_type & N_EXT)) {
                 return (void*)((char *)moduleBase + symtab[i].n_value);
             }
         }
     }
 
-    return NULL; // Function not found
+    return NULL; /* Function not found */
 }
 
 
@@ -82,7 +82,6 @@ int main() {
         goto exit;
     }
 
-    // --- Base address obtained ---
     NSLogFunc NSLog_ptr_manual = (NSLogFunc)DarwinGetProcAddress(foundationBaseAddress, "NSLog");
     if (!NSLog_ptr_manual) {
         printf("[!] DarwinGetProcAddress error: Failed to resolve NSLog manually.\n");
