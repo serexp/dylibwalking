@@ -15,7 +15,7 @@ The goal is to explore runtime dylib discovery and function resolution via these
 
 *   **`loadeddylibs.c`**: Lists loaded dylibs and their base addresses. Depends on the CRT and naturally, dyld.
 *   **`poc_nslog.c`**: Dynamically resolves and calls `NSLog` from Foundation. Depends on the CRT, dyld and Foundation framework at compile-time.
-*   **`walker.c`: Experimental NSLog PoC that doesn't use dlsym/dlopen. Requires fixing, released as study material.
+*   **`walker.c`**: Experimental NSLog PoC that doesn't use dlsym/dlopen. Requires fixing, released as study material.
 *   *Further PoCs will be released. A cURL PoC is in the works. :)*
 
 ## Technical Details
@@ -48,5 +48,5 @@ A Makefile is provided. Though if you prefer commands:\
 `clang loadeddylibs.c -O2`\
 `clang poc_nslog.c -framework Foundation -O2`\
 `clang walker.c -nostdlib -lobjc -lc -Wall -O3 -std=c99`
-Ssssssssssssssssssssssssssssssssssssssupports building with `osxcross` and clang on MacOS (or *OS).\
+Supports building with `osxcross` and clang on MacOS (or *OS).\
 Successfully built on iOS and iPadOS, targetting iOS and iPadOS.
